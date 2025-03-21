@@ -5,7 +5,7 @@ import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 // Remove Container since it's unused
-import { Button, Box, Typography } from '@mui/material';
+// Remove all material UI components not being used
 import Dashboard from './components/Dashboard';
 // Comment out since it's not being used
 // import { msalConfig } from "./authConfig";

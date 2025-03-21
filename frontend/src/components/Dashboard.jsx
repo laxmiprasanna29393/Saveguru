@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Box, CircularProgress } from '@mui/material';
+import { Container, Grid, Paper, Typography, CircularProgress } from '@mui/material';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import CostSummaryCard from './CostSummaryCard';
 import RecommendationsTable from './RecommendationsTable';
