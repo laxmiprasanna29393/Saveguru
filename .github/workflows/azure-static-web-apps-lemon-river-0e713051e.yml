@@ -29,9 +29,9 @@ jobs:
           action: "upload"
           
           ###### Repository/Build Configurations - These values should match your project structure ######
-          app_location: "src"    # Adjust if your React app is in a different folder
+          app_location: "frontend"  # ✅ Correct React project folder
           api_location: "api"    # Adjust if your Azure Functions folder is named differently
-          output_location: "build" # Adjust if your React build output is in a different location
+          output_location: "frontend/build" # ✅ Correct React build output folder
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
