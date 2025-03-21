@@ -17,7 +17,52 @@ function Dashboard() {
     endDate: new Date()
   });
 
-  // Function to generate mock data
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Build query parameters based on filters
+        const params = new URLSearchParams();
+        params.append('timePeriod', filters.timePeriod);
+        if (filters.resourceGroup !== 'all') {
+          params.append('resourceGroup', filters.resourceGroup);
+        }
+        
+        // Try to fetch from the API
+        console.log(`Fetching data from: /api/analyze-azure?${params.toString()}`);
+        const response = await fetch(`/api/analyze-azure?${params.toString()}`);
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Data received from API:', data);
+        setDashboardData(data);
+      } catch (err) {
+        console.error('Error fetching data from API:', err);
+        setError(`Failed to fetch data: ${err.message}. Using mock data instead.`);
+        
+        // Fall back to mock data
+        console.log('Falling back to mock data');
+        const mockData = generateMockData();
+        setDashboardData(mockData);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, [filters.timePeriod, filters.resourceGroup]);
+
+  const handleApplyFilters = () => {
+    // This will trigger the useEffect due to the dependency on filters
+    console.log('Applying filters:', filters);
+  };
+
+  // Generate mock data function
   function generateMockData() {
     const today = new Date();
     const dailyCosts = [];
@@ -82,54 +127,7 @@ function Dashboard() {
     };
   }
 
-  useEffect(() => {
-  async function fetchData() {
-    setLoading(true);
-    try {
-      // Build query parameters based on filters
-      const params = new URLSearchParams();
-      params.append('timePeriod', filters.timePeriod);
-      if (filters.resourceGroup !== 'all') {
-        params.append('resourceGroup', filters.resourceGroup);
-      }
-      
-      // Try to fetch real data
-      console.log(`Fetching data from: /api/analyze-azure?${params.toString()}`);
-      const response = await fetch(`/api/analyze-azure?${params.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('Data received:', data);
-      setDashboardData(data);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      // Fall back to mock data if the API fails
-      console.log('Falling back to mock data');
-      setDashboardData(generateMockData());
-    } finally {
-      setLoading(false);
-    }
-  }
-  
-  fetchData();
-}, [filters.timePeriod, filters.resourceGroup]);
-    
-    fetchData();
-  }, []);  // Empty dependency array means this runs once on mount
-
-  const handleApplyFilters = () => {
-    setLoading(true);
-    // Here you would fetch data based on the filters
-    // For now, just simulate loading and use our mock data
-    setTimeout(() => {
-      setDashboardData(generateMockData());
-      setLoading(false);
-    }, 1000);
-  };
-
+  // Render loading state
   if (loading && !dashboardData) {
     return (
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -138,23 +136,18 @@ function Dashboard() {
       </Container>
     );
   }
-  
-  if (error && !dashboardData) {
-    return (
-      <Container sx={{ mt: 4 }}>
-        <Paper sx={{ p: 3, bgcolor: '#ffebee' }}>
-          <Typography variant="h5" color="error">Error loading data</Typography>
-          <Typography variant="body1">{error}</Typography>
-        </Paper>
-      </Container>
-    );
-  }
-  
+
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" component="h1" gutterBottom>
         SAVEGURU Azure Cost Dashboard
       </Typography>
+      
+      {error && (
+        <Paper sx={{ p: 2, mb: 3, bgcolor: '#fff4e5' }}>
+          <Typography color="error">{error}</Typography>
+        </Paper>
+      )}
       
       <FilterControls 
         filters={filters} 
