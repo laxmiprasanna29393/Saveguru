@@ -1,15 +1,19 @@
 import React from 'react';
-import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
-import { PublicClientApplication } from "@azure/msal-browser";
+// Comment out unused imports
+// import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+// import { PublicClientApplication } from "@azure/msal-browser";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Container, Button, Box, Typography } from '@mui/material';
+// Remove Container since it's unused
+import { Button, Box, Typography } from '@mui/material';
 import Dashboard from './components/Dashboard';
-import { msalConfig } from "./authConfig";
+// Comment out since it's not being used
+// import { msalConfig } from "./authConfig";
 import './App.css';
 
+// Comment out since these are unused
 // MSAL instance
-const msalInstance = new PublicClientApplication(msalConfig);
+// const msalInstance = new PublicClientApplication(msalConfig);
 
 // Create a theme
 const theme = createTheme({
@@ -23,39 +27,14 @@ const theme = createTheme({
   },
 });
 
-// Login component
+// Also comment out the LoginContent function since it's not used
+/*
 function LoginContent() {
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        textAlign: 'center',
-        p: 2
-      }}
-    >
-      <Typography variant="h3" component="h1" gutterBottom>
-        SAVEGURU
-      </Typography>
-      <Typography variant="h5" color="text.secondary" gutterBottom>
-        Unified Cloud Cost Optimization Platform
-      </Typography>
-      <Typography variant="body1" sx={{ maxWidth: 600, mb: 4 }}>
-        Monitor, analyze, and optimize your cloud costs across platforms from a single dashboard.
-      </Typography>
-      <Button
-        variant="contained"
-        size="large"
-        onClick={() => msalInstance.loginRedirect()}
-      >
-        Sign in with Microsoft
-      </Button>
-    </Box>
+    ...
   );
 }
+*/
 
 function App() {
   return (
@@ -63,19 +42,8 @@ function App() {
       <CssBaseline />
       {/* Temporarily bypass authentication for development */}
       <Dashboard />
-      {/* Comment out the MSAL provider for now
-      <MsalProvider instance={msalInstance}>
-        <div className="App">
-          <AuthenticatedTemplate>
-            <Dashboard />
-          </AuthenticatedTemplate>
-          <UnauthenticatedTemplate>
-            <LoginContent />
-          </UnauthenticatedTemplate>
-        </div>
-      </MsalProvider>
-      */}
     </ThemeProvider>
   );
 }
+
 export default App;
