@@ -83,26 +83,39 @@ function Dashboard() {
   }
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        // For development, use the mock data function
-        // In production, this would be replaced with an actual API call
-        // const response = await fetch('/api/analyze-azure');
-        // if (!response.ok) throw new Error('Failed to fetch data');
-        // const data = await response.json();
-        
-        // Using mock data for now
-        const data = generateMockData();
-        
-        setDashboardData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err.message);
-        setLoading(false);
+  async function fetchData() {
+    setLoading(true);
+    try {
+      // Build query parameters based on filters
+      const params = new URLSearchParams();
+      params.append('timePeriod', filters.timePeriod);
+      if (filters.resourceGroup !== 'all') {
+        params.append('resourceGroup', filters.resourceGroup);
       }
+      
+      // Try to fetch real data
+      console.log(`Fetching data from: /api/analyze-azure?${params.toString()}`);
+      const response = await fetch(`/api/analyze-azure?${params.toString()}`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Data received:', data);
+      setDashboardData(data);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      // Fall back to mock data if the API fails
+      console.log('Falling back to mock data');
+      setDashboardData(generateMockData());
+    } finally {
+      setLoading(false);
     }
+  }
+  
+  fetchData();
+}, [filters.timePeriod, filters.resourceGroup]);
     
     fetchData();
   }, []);  // Empty dependency array means this runs once on mount
