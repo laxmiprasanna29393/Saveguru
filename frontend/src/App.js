@@ -1,19 +1,8 @@
 import React from 'react';
-// Comment out unused imports
-// import { MsalProvider, AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
-// import { PublicClientApplication } from "@azure/msal-browser";
+import Dashboard from './components/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-// Remove Container since it's unused
-// Remove all material UI components not being used
-import Dashboard from './components/Dashboard';
-// Comment out since it's not being used
-// import { msalConfig } from "./authConfig";
 import './App.css';
-
-// Comment out since these are unused
-// MSAL instance
-// const msalInstance = new PublicClientApplication(msalConfig);
 
 // Create a theme
 const theme = createTheme({
@@ -27,20 +16,10 @@ const theme = createTheme({
   },
 });
 
-// Also comment out the LoginContent function since it's not used
-/*
-function LoginContent() {
-  return (
-    ...
-  );
-}
-*/
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      {/* Temporarily bypass authentication for development */}
       <Dashboard />
     </ThemeProvider>
   );

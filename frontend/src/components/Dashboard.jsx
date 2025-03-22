@@ -17,52 +17,7 @@ function Dashboard() {
     endDate: new Date()
   });
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        // Build query parameters based on filters
-        const params = new URLSearchParams();
-        params.append('timePeriod', filters.timePeriod);
-        if (filters.resourceGroup !== 'all') {
-          params.append('resourceGroup', filters.resourceGroup);
-        }
-        
-        // Try to fetch from the API
-        console.log(`Fetching data from: /api/analyze-azure?${params.toString()}`);
-        const response = await fetch(`/api/analyze-azure?${params.toString()}`);
-        
-        if (!response.ok) {
-          throw new Error(`API request failed with status ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('Data received from API:', data);
-        setDashboardData(data);
-      } catch (err) {
-        console.error('Error fetching data from API:', err);
-        setError(`Failed to fetch data: ${err.message}. Using mock data instead.`);
-        
-        // Fall back to mock data
-        console.log('Falling back to mock data');
-        const mockData = generateMockData();
-        setDashboardData(mockData);
-      } finally {
-        setLoading(false);
-      }
-    }
-    
-    fetchData();
-  }, [filters.timePeriod, filters.resourceGroup]);
-
-  const handleApplyFilters = () => {
-    // This will trigger the useEffect due to the dependency on filters
-    console.log('Applying filters:', filters);
-  };
-
-  // Generate mock data function
+  // Function to generate mock data for fallback
   function generateMockData() {
     const today = new Date();
     const dailyCosts = [];
@@ -126,6 +81,54 @@ function Dashboard() {
       ]
     };
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Build query parameters based on filters
+        const params = new URLSearchParams();
+        params.append('timePeriod', filters.timePeriod);
+        if (filters.resourceGroup !== 'all') {
+          params.append('resourceGroup', filters.resourceGroup);
+        }
+        
+        // Log the request being made for debugging
+        console.log(`Fetching data from: /api/analyze-azure?${params.toString()}`);
+        
+        // Try to fetch from the API
+        const response = await fetch(`/api/analyze-azure?${params.toString()}`);
+        
+        if (!response.ok) {
+          throw new Error(`API request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Data received from API:', data);
+        
+        setDashboardData(data);
+      } catch (err) {
+        console.error('Error fetching data from API:', err);
+        setError(`Failed to fetch data: ${err.message}. Using mock data instead.`);
+        
+        // Fall back to mock data
+        console.log('Falling back to mock data');
+        const mockData = generateMockData();
+        setDashboardData(mockData);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
+  }, [filters.timePeriod, filters.resourceGroup]);
+
+  const handleApplyFilters = () => {
+    // This will trigger the useEffect due to the dependency on filters
+    console.log('Applying filters:', filters);
+  };
 
   // Render loading state
   if (loading && !dashboardData) {

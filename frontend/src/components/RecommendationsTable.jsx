@@ -1,66 +1,45 @@
 import React from 'react';
-import { 
-  Paper, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
-  Typography,
-  Chip
-} from '@mui/material';
+import { Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 function RecommendationsTable({ recommendations }) {
-  // Format currency values
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-  };
-
-  if (!recommendations || recommendations.length === 0) {
-    return (
-      <Paper sx={{ p: 2, mt: 2 }}>
-        <Typography variant="h6" gutterBottom>Optimization Recommendations</Typography>
-        <Typography variant="body1">No recommendations available at this time.</Typography>
-      </Paper>
-    );
-  }
-
   return (
-    <Paper sx={{ p: 2, mt: 2 }}>
-      <Typography variant="h6" gutterBottom>Optimization Recommendations</Typography>
+    <Paper sx={{ p: 2, width: '100%' }}>
+      <Typography variant="h6" gutterBottom>
+        Cost Optimization Recommendations
+      </Typography>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="recommendations table">
           <TableHead>
             <TableRow>
-              <TableCell>Resource</TableCell>
-              <TableCell>Type</TableCell>
+              <TableCell>Resource Name</TableCell>
+              <TableCell>Resource Type</TableCell>
               <TableCell>Current Configuration</TableCell>
-              <TableCell>Recommendation</TableCell>
-              <TableCell>Current Cost</TableCell>
-              <TableCell>Potential Savings</TableCell>
+              <TableCell>Recommended Configuration</TableCell>
+              <TableCell align="right">Current Monthly Cost</TableCell>
+              <TableCell align="right">Potential Savings</TableCell>
+              <TableCell>Reason</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {recommendations.map((row, index) => (
-              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            {recommendations.map((recommendation, index) => (
+              <TableRow key={index}>
                 <TableCell component="th" scope="row">
-                  {row.resourceName}
+                  {recommendation.resourceName}
                 </TableCell>
-                <TableCell>{row.resourceType}</TableCell>
-                <TableCell>{row.currentSize || row.currentTier}</TableCell>
+                <TableCell>{recommendation.resourceType}</TableCell>
                 <TableCell>
-                  <Chip 
-                    label={row.recommendedSize || row.recommendedTier || row.recommendedAction} 
-                    color="primary" 
-                    variant="outlined" 
-                    size="small" 
-                  />
+                  {recommendation.currentSize || recommendation.currentTier}
                 </TableCell>
-                <TableCell>{formatCurrency(row.currentMonthlyCost)}/month</TableCell>
-                <TableCell sx={{ color: 'success.main', fontWeight: 'bold' }}>
-                  {formatCurrency(row.potentialSavings)}/month
+                <TableCell>
+                  {recommendation.recommendedSize || recommendation.recommendedTier}
                 </TableCell>
+                <TableCell align="right">
+                  ${recommendation.currentMonthlyCost.toFixed(2)}
+                </TableCell>
+                <TableCell align="right" sx={{ color: 'success.main', fontWeight: 'bold' }}>
+                  ${recommendation.potentialSavings.toFixed(2)}
+                </TableCell>
+                <TableCell>{recommendation.reason}</TableCell>
               </TableRow>
             ))}
           </TableBody>
