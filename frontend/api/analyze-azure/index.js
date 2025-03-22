@@ -2,6 +2,23 @@ const { DefaultAzureCredential } = require('@azure/identity');
 const { CostManagementClient } = require('@azure/arm-costmanagement');
 
 module.exports = async function (context, req) {
+    context.log('API function triggered');
+    
+    // Return a simple response for testing
+    if (req.query.test === "true") {
+        context.res = {
+            status: 200,
+            body: {
+                message: "API function is working",
+                subscription: process.env.AZURE_SUBSCRIPTION_ID || "Not set",
+                identity: context.bindingData.identityPrincipalId || "Not available",
+                time: new Date().toISOString()
+            }
+        };
+        return;
+    }
+    
+    // Original function code continues...
     context.log('Processing Azure cost analysis request');
 
     // Get query parameters
