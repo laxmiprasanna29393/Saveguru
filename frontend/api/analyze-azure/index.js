@@ -1,4 +1,4 @@
-const { DefaultAzureCredential } = require('@azure/identity');
+const { ManagedIdentityCredential } = require('@azure/identity');
 const { CostManagementClient } = require('@azure/arm-costmanagement');
 
 module.exports = async function (context, req) {
@@ -40,7 +40,7 @@ module.exports = async function (context, req) {
         
         try {
             // Use DefaultAzureCredential to support managed identity
-            const credential = new DefaultAzureCredential();
+            const credential = new ManagedIdentityCredential();
             const client = new CostManagementClient(credential);
             
             // Calculate date range
